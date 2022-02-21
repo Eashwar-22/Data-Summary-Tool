@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container h-auto w-1/4 p-3 text-center">
+    <form method=post enctype=multipart/form-data>
+        <div class="grid grid-cols-2 gap-2">
+            <label for="file-upload" class="p-1 rounded-lg text-gray-50 bg-gray-800 cursor-pointer active:text-red-400 hover:bg-gray-900 hover:text-gray-100">
+                Browse Files
+            </label>
+            <input id="file-upload" type=file name=file style="display: none;"/>
+            <input type=submit value=Run class="p-1 mx-2 rounded-lg text-gray-50 bg-cyan-500 cursor-pointer active:text-red-400 hover:bg-cyan-600 hover:text-gray-100">
+        </div>
+    </form>
+    <br>
+</div>
+{% endblock %}

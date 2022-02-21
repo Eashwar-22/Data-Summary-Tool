@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Analysis Tool</title>
+    <link rel="stylesheet" href="../static/public/output.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+</head>
+<body>
+
+<div class="container p-3 flex flex-wrap min-w-full mx-auto bg-gray-800 ">
+    <p class="text-3xl"><span class="text-cyan-500 ">DATA</span><span class="text-gray-50">SUMMARY</span><span class="text-cyan-500 ">TOOL</span></p>
+</div><br>
+
+<div class="rounded-lg container mx-3 h-auto w-1/2 p-3 text-gray-50 bg-gray-600">
+    Upload a file with any one of the following formats: <br/><br>
+    <div class="grid grid-cols-12 text-center gap-2">
+        <div class="border-2 rounded-lg hover:bg-gray-50 hover:text-cyan-500 cursor-default"> .csv </div>
+        <div class="border-2 rounded-lg hover:bg-gray-50 hover:text-cyan-500 cursor-default"> .xlsx </div>
+        <div class="border-2 rounded-lg hover:bg-gray-50 hover:text-cyan-500 cursor-default"> .xls </div>
+    </div>
+</div>
+<br>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

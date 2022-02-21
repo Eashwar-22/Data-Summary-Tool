@@ -1,0 +1,268 @@
+{% extends "dash.html" %}
+
+{% block tablehead %}{% endblock tablehead %}
+
+
+{% block tablebody %}
+<div class="font-bold text-gray-50 bg-gray-800 text-center">TABLE PREVIEW</div>
+<br>
+<div class="p-3 container mx-auto w-screen overflow-x-auto text-sm">
+    <table class="table-auto">
+        <thead>
+        <tr class="bg-gray-100 ">
+            {% for col in df.columns %}
+            {% if col in obj.int_df.columns %}
+            <th class="border-2  border-separate bg-cyan-50 text-cyan-500 p-3">{{col}}</th>
+            {% elif col in obj.float_df.columns %}
+            <th class="border-2  bg-purple-50 text-purple-500 p-1">{{col}}</th>
+            {% elif col in obj.str_df.columns %}
+            <th class="border-2  bg-red-50 text-red-500 p-1">{{col}}</th>
+            {% elif col in obj.bool_df.columns %}
+            <th class="border-2  bg-green-50 text-green-500 p-1">{{col}}</th>
+            {% elif col in obj.datetime_df.columns %}
+            <th class="border-2  bg-orange-50 text-orange-500 p-1">{{col}}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in range(nrows) %}
+        <tr>
+            {% for c in range(ncols) %}
+            {% if r%2==0 %}
+            <td class="bg-white border-2">   {{ df.iloc[r][c] }}</td>
+            {% else %}
+            <td class="bg-gray-50 border-2">   {{ df.iloc[r][c] }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        <tr>
+            {% for c in range(ncols) %}
+            <td class="bg-white border-2">...</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for c in range(ncols) %}
+            <td class="bg-white border-2">...</td>
+            {% endfor %}
+        </tr>
+        {% for r in range(-1,-nrows-1,-1) %}
+        <tr>
+            {% for c in range(ncols) %}
+            {% if r%2==0 %}
+            <td class="bg-white border-2">{{ df.iloc[r][c] }}</td>
+            {% else %}
+            <td class="bg-gray-50 border-2">{{ df.iloc[r][c] }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+{% endblock tablebody %}
+
+
+{% block summary %}
+<div class="font-bold text-gray-50 bg-gray-800 text-center" id="tab_sum">TABLE SUMMARY</div>
+<main class="max-h-screen">
+    <section class="w-full h-screen">
+        <div class="container h-full min-w-full mx-auto grid grid-cols-4">
+            <div class="flex bg-gray-200">
+                <div class="m-auto">
+                    <p class="text-xl text-gray-800">
+                        <span class="text-3xl">{{ obj.column_count }}</span> COLUMNS<br>
+                        <span class="text-3xl">{{ obj.row_count_commas }}</span> ROWS<br><br>
+                        {% for i in obj.dtype_column_count.keys() %}
+                        {% if i=='Integer' %}
+                        <span class="text-cyan-500">{{obj.dtype_column_count[i]}} {{i}}</span> <br>
+                        {% elif i=='Floating Point' %}
+                        <span class="text-purple-500">{{ obj.dtype_column_count[i]  }} {{i}}</span> <br>
+                        {% elif i=='String' %}
+                        <span class="text-red-500">{{ obj.dtype_column_count[i]  }} {{i}}</span> <br>
+                        {% elif i=='Boolean' %}
+                        <span class="text-green-500">{{ obj.dtype_column_count[i]  }} {{i}}</span> <br>
+                        {% elif i=='Datetime' %}
+                        <span class="text-orange-500">{{ obj.dtype_column_count[i]  }} {{i}}</span> <br>
+                        {% endif %}
+                        {% endfor %}
+                    </p><br>
+                </div>
+            </div>
+            <div class="flex bg-gray-300 col-span-2">
+                <div class="m-auto ">
+                    <p class="text-xl text-gray-800">
+                        <span class="text-3xl">{{ obj.total_cells_commas }}</span> TOTAL CELLS<br>
+                        <span class="text-3xl">{{ obj.missing_count_commas }}</span> MISSING CELLS<br><br>
+                        <span class="text-3xl">{{ obj.missing_ratio }}%</span> MISSING <br>
+                        {% if obj.missing_ratio_integer_cols>0 %}
+                        <span class="text-2xl text-cyan-500">{{ obj.missing_ratio_integer_cols }}% from Integer columns</span> <br>
+                        {% endif %}
+                        {% if obj.missing_ratio_float_cols>0 %}
+                        <span class="text-2xl text-purple-500">{{ obj.missing_ratio_float_cols }}% from Floating-point columns</span> <br>
+                        {% endif %}
+                        {% if obj.missing_ratio_str_cols>0 %}
+                        <span class="text-2xl text-red-500">{{ obj.missing_ratio_str_cols }}% from String columns</span> <br>
+                        {% endif %}
+                        {% if obj.missing_ratio_bool_cols>0 %}
+                        <span class="text-2xl text-green-500">{{ obj.missing_ratio_bool_cols }}% from Boolean columns</span> <br>
+                        {% endif %}
+                        {% if obj.missing_ratio_datetime_cols>0 %}
+                        <span class="text-2xl text-orange-500">{{ obj.missing_ratio_datetime_cols }}% from Datetime columns</span> <br>
+                        {% endif %}
+                    </p><br>
+                </div>
+            </div>
+
+            <div class="flex bg-gray-700">
+                <div class="m-auto">
+                    <p class="text-xl"></p><br>
+                </div>
+            </div>
+            <div class="flex bg-cyan-800">
+                <div class="m-auto">
+                    <p class="text-xl"></p><br>
+                </div>
+            </div>
+            <div class="flex bg-gray-800">
+                <div class="m-auto">
+                    <p class="text-xl"></p><br>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+</main>
+{% endblock summary %}
+
+
+{% block column_summary %}
+<br>
+<div class="font-bold text-gray-50 bg-gray-800 text-center" id="col_sum">COLUMN SUMMARY</div>
+<br>
+<div class="p-3 container mx-auto w-screen overflow-x-auto text-sm">
+    <table class="table-auto">
+        <thead>
+        <tr class="bg-gray-100 ">
+            {% for col in obj.col_sum.columns %}
+            <th class="border-2  border-separate bg-gray-50 text-gray-500 p-3">
+                {{col}}
+            </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in range(obj.col_sum_nrow) %}
+        <tr>
+            {% for c in range(obj.col_sum_ncol) %}
+            <td class='{{
+                            "text-cyan-500 bg-cyan-50 border-2 hover:bg-gray-400 hover:text-white" if obj.col_sum["Datatype"][r]=="int64"
+                            else "text-purple-500 bg-purple-50 border-2 hover:bg-gray-400 hover:text-white" if obj.col_sum["Datatype"][r]=="float64"
+                            else "text-red-500 bg-red-50 border-2 hover:bg-gray-400 hover:text-white" if obj.col_sum["Datatype"][r]=="object"
+                            else "text-green-500 bg-green-50 border-2 hover:bg-gray-400 hover:text-white" if obj.col_sum["Datatype"][r]=="bool"
+                            else "text-orange-500 bg-orange-50 border-2 hover:bg-gray-400 hover:text-white" if obj.col_sum["Datatype"][r]=="datetime64[ns]"
+                            else "text-gray-500 bg-gray-50 border-2 hover:bg-gray-400 hover:text-white"
+                       }}'>
+                <a href="#{{r}}_id">  {{ obj.col_sum.iloc[r][c] }}</a>
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock column_summary %}
+
+
+{% block column %}
+<br>
+<div class="font-bold text-gray-50 bg-gray-800 text-center" id="cols">COLUMN SUMMARY</div>
+<main class="max-h-screen">
+    {% for col in obj.df.columns %}
+    <section id="{{obj.columns.index(col)}}_id"
+             class='{{"w-full h-screen bg-cyan-500" if col in obj.int_df.columns
+                      else "w-full h-screen bg-purple-300 border-2 border-black" if col in obj.float_df.columns
+                      else "w-full h-screen bg-red-300 border-2 border-black" if col in obj.str_df.columns
+                      else "w-full h-screen bg-green-300 border-2 border-black" if col in obj.bool_df.columns
+                      else "w-full h-screen bg-orange-300 border-2 border-black" if col in obj.datetime_df.columns
+                      else "w-full h-screen bg-gray-800 border-2 border-black"
+                    }}' >
+        <div class="container h-full min-w-full mx-auto grid grid-cols-4">
+            <div class="flex">
+                <div class="m-auto">
+                    <p class="text-2xl font-bold">
+                        {{ col }}
+                    </p><br>
+                </div>
+            </div>
+            <div class="flex bg-gray-200">
+                <div class="m-auto">
+                    <p class="text-2xl">
+                        <span class="text-3xl font-bold">{{ obj.column_info(col)['Count'].values[0] }}</span> Rows<br>
+                        <span class="text-3xl font-bold text-blue-500">{{ obj.column_info(col)['Unique Values'].values[0] }}</span> Distinct Values<br>
+                        <span class="text-3xl font-bold text-red-500">{{ obj.column_info(col)['Missing Values'].values[0] }}</span> Rows Missing<br>
+                        {% if obj.column_info(col)['Missing Values'].values[0]!=0 %}
+                        <span class="text-3xl font-bold text-red-500">{{ obj.column_info(col)['Missing Values Contribution%'].values[0] }}%</span> of Total Missing Data<br>
+                        {% endif %}
+                        <span class="text-3xl font-bold text-green-700">{{ obj.column_info(col)['Cardinality%'].values[0] }}%</span> Cardinality<br>
+                        <span class="text-3xl font-bold text-green-700">{{ obj.column_info(col)['Cardinality Level'].values[0] }}</span> Cardinality<br>
+                    </p><br>
+                </div>
+            </div>
+            <div class="flex col-span-2">
+                {% if (col in obj.int_df.columns) or (col in obj.float_df.columns) %}
+                <div class="container h-full min-w-full grid grid-cols-6 m-auto text-center text-xl">
+                    <div class="col-span-6"><span class="text-3xl font-bold">{{ obj.numeric_column(col)['dt'] }}</span> Type </div>
+                    <div class="col-span-3">Minimum  <span class="text-3xl font-bold text-red-700">{{ obj.numeric_column(col)['min'] }}</span><br></div>
+                    <div class="col-span-3">Maximum <span class="text-3xl font-bold text-green-800">{{ obj.numeric_column(col)['max'] }}</span></div>
+                    <div class="col-span-6">Average  <span class="text-3xl font-bold text-lime-600">{{ obj.numeric_column(col)['mean'] }}</span></div>
+                    <div class="col-span-2">25% <span class="text-3xl font-bold text-orange-500">{{ obj.numeric_column(col)['q25'] }}</span></div>
+                    <div class="col-span-2">50% <span class="text-3xl font-bold text-green-700">{{ obj.numeric_column(col)['q50'] }}</span></div>
+                    <div class="col-span-2">75% <span class="text-3xl font-bold text-green-900">{{ obj.numeric_column(col)['q75'] }}</span></div>
+                    <div class="col-span-6">Skew  <span class="text-3xl font-bold text-gray-600">{{ obj.numeric_column(col)['skew'] }}</span></div>
+                </div>
+                {% else %}
+                <span class="text-3xl font-bold">Non-numeric</span> Values<br>
+                {% endif %}
+            </div>
+
+            <div class="flex bg-gray-800 text-gray-50">
+                <div class="m-auto hover:scale-110">
+                    <a href="#col_sum">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+                            <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="flex col-span-3 bg-gray-700 text-gray-50">
+                {% if (col in obj.int_df.columns) or (col in obj.float_df.columns) %}
+                <div class="container h-full min-w-full grid grid-cols-10 m-auto text-center">
+                    {% for i in range(0,10) %}
+                    <div class="items-center border-2 rounded-lg my-auto text-black border-black {{obj.histogram_data(col)['color'].loc[i]}}">{{obj.histogram_data(col)['upper'].loc[i]}}</div>
+                    {% endfor %}
+                    {% for i in range(0,10) %}
+                    <div class="items-center border-2 rounded-lg my-auto bg-white text-black">{{obj.histogram_data(col)['index'].loc[i]}}</div>
+                    {% endfor %}
+                    {% for i in range(1,11) %}
+                    <div class="items-center my-auto">Bin {{i}}</div>
+                    {% endfor %}
+                    <div class="col-span-10 font-bold "> DISTRIBUTION (Top - FREQUENCY, Middle - UPPER LIMIT OF BIN RANGE, Bottom - BIN NUMBER) </div>
+                </div>
+                {% else %}
+                <span class="text-3xl font-bold">Non-numeric</span> Values<br>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </section>
+
+    {% endfor %}
+</main>
+{% endblock column %}
+

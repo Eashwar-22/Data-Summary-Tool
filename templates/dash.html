@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container h-auto w-1/4 p-3 text-center">
+    <div class="grid grid-cols-2 gap-2">
+    <a href="/"  class="p-1 rounded-lg text-gray-50 bg-red-400 cursor-pointer ">
+        New File
+    </a><br>
+    <a href="#tab_sum"  class="p-1 rounded-lg text-gray-50 bg-cyan-400 cursor-pointer ">
+        Table Summary
+    </a>
+    <a href="#col_sum"  class="p-1 rounded-lg text-gray-50 bg-cyan-400 cursor-pointer ">
+        Column Summary
+    </a>
+</div>
+    <br>
+    <div class="font-bold text-gray-800 container h-auto w-auto p-2 text-center border-b-2">
+        <p class="text-cyan-500 p-1 rounded-md bg-gray-100 border">{{ filename }} </p>
+    </div>
+    <br>
+    {% block tablehead %} {% endblock tablehead %}
+    <br>
+</div>
+
+{% block tablebody %} {% endblock tablebody %}
+
+{% block summary %} {% endblock summary %}
+
+{% block column_summary %} {% endblock column_summary %}
+
+{% block column %} {% endblock column %}
+
+
+{% endblock content %}

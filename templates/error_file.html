@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container h-auto w-1/4 p-3 text-center">
+    <div class="grid grid-cols-2 gap-2">
+        <a href="/"  class="p-1 rounded-lg text-gray-50 bg-red-400 cursor-pointer ">
+            New File
+        </a>
+        {% if empty==True and wrong==False %}
+            <div class="p-1 mx-2 text-red-400"> No file uploaded</div>
+        {% else %}
+            <div class="p-1 mx-2 text-red-400"> Wrong file format</div>
+        {% endif %}
+    </div>
+    <br>
+
+</div>
+
+{% endblock %}
