@@ -70,7 +70,7 @@
 <main class="max-h-screen">
     <section class="w-full h-screen">
         <div class="container h-full min-w-full mx-auto grid grid-cols-4">
-            <div class="flex bg-gray-200">
+            <div class="flex bg-gray-200 col-span-2">
                 <div class="m-auto">
                     <p class="text-xl text-gray-800">
                         <span class="text-3xl">{{ obj.column_count }}</span> COLUMNS<br>
@@ -116,21 +116,21 @@
                 </div>
             </div>
 
-            <div class="flex bg-gray-700">
-                <div class="m-auto">
-                    <p class="text-xl"></p><br>
-                </div>
-            </div>
-            <div class="flex bg-cyan-800">
-                <div class="m-auto">
-                    <p class="text-xl"></p><br>
-                </div>
-            </div>
-            <div class="flex bg-gray-800">
-                <div class="m-auto">
-                    <p class="text-xl"></p><br>
-                </div>
-            </div>
+<!--            <div class="flex bg-gray-700">-->
+<!--                <div class="m-auto">-->
+<!--                    <p class="text-xl"></p><br>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="flex bg-cyan-800">-->
+<!--                <div class="m-auto">-->
+<!--                    <p class="text-xl"></p><br>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="flex bg-gray-800">-->
+<!--                <div class="m-auto">-->
+<!--                    <p class="text-xl"></p><br>-->
+<!--                </div>-->
+<!--            </div>-->
 
         </div>
 
@@ -215,17 +215,25 @@
             <div class="flex col-span-2">
                 {% if (col in obj.int_df.columns) or (col in obj.float_df.columns) %}
                 <div class="container h-full min-w-full grid grid-cols-6 m-auto text-center text-xl">
-                    <div class="col-span-6"><span class="text-3xl font-bold">{{ obj.numeric_column(col)['dt'] }}</span> Type </div>
-                    <div class="col-span-3">Minimum  <span class="text-3xl font-bold text-red-700">{{ obj.numeric_column(col)['min'] }}</span><br></div>
-                    <div class="col-span-3">Maximum <span class="text-3xl font-bold text-green-800">{{ obj.numeric_column(col)['max'] }}</span></div>
-                    <div class="col-span-6">Average  <span class="text-3xl font-bold text-lime-600">{{ obj.numeric_column(col)['mean'] }}</span></div>
-                    <div class="col-span-2">25% <span class="text-3xl font-bold text-orange-500">{{ obj.numeric_column(col)['q25'] }}</span></div>
-                    <div class="col-span-2">50% <span class="text-3xl font-bold text-green-700">{{ obj.numeric_column(col)['q50'] }}</span></div>
-                    <div class="col-span-2">75% <span class="text-3xl font-bold text-green-900">{{ obj.numeric_column(col)['q75'] }}</span></div>
-                    <div class="col-span-6">Skew  <span class="text-3xl font-bold text-gray-600">{{ obj.numeric_column(col)['skew'] }}</span></div>
+                    <div class="col-span-6"><span class="text-3xl font-bold text-gray-50">{{ obj.numeric_column(col)['dt'] }}</span> </div>
+                    <div class="col-span-3 text-red-700 font-bold">Minimum  <span class="text-3xl font-bold text-red-700">{{ obj.numeric_column(col)['min'] }}</span><br></div>
+                    <div class="col-span-3 text-green-800 font-bold">Maximum <span class="text-3xl font-bold text-green-800">{{ obj.numeric_column(col)['max'] }}</span></div>
+                    <div class="col-span-6 text-lime-600 font-bold">Average  <span class="text-3xl font-bold text-lime-600">{{ obj.numeric_column(col)['mean'] }}</span></div>
+                    <div class="col-span-2 text-orange-500 font-bold">25% <span class="text-3xl font-bold text-orange-500">{{ obj.numeric_column(col)['q25'] }}</span></div>
+                    <div class="col-span-2 text-green-700 font-bold">50% <span class="text-3xl font-bold text-green-700">{{ obj.numeric_column(col)['q50'] }}</span></div>
+                    <div class="col-span-2 text-green-900 font-bold">75% <span class="text-3xl font-bold text-green-900">{{ obj.numeric_column(col)['q75'] }}</span></div>
+                    <div class="col-span-6 text-gray-600 font-bold">Skew  <span class="text-3xl font-bold text-gray-600">{{ obj.numeric_column(col)['skew'] }}</span></div>
                 </div>
                 {% else %}
-                <span class="text-3xl font-bold">Non-numeric</span> Values<br>
+                <div class="container h-full min-w-full grid grid-cols-4 m-auto text-center text-rose-800">
+                   <div class="col-span-4 p-3 text-2xl">Top {{obj.str_col(col)['length_2']}} occurring values </div>
+
+                    {% for i in range(obj.str_col(col)['length_2']) %}
+                    <div class="text-xl col-span-2 text-gray-50 font-semibold">{{obj.str_col(col)['top_values']['value'].iloc[i]}}</div>
+                    <div class="text-xl font-bold">{{obj.str_col(col)['top_values']['perc_value'].iloc[i]}} <span class="text-sm">%</span></div>
+                    <div class="text-2xl font-semibold">{{obj.str_col(col)['top_values']['count'].iloc[i]}} <span class="text-xl">times</span></div>
+                    {% endfor %}
+                </div>
                 {% endif %}
             </div>
 
@@ -254,7 +262,17 @@
                     <div class="col-span-10 font-bold "> DISTRIBUTION (Top - FREQUENCY, Middle - UPPER LIMIT OF BIN RANGE, Bottom - BIN NUMBER) </div>
                 </div>
                 {% else %}
-                <span class="text-3xl font-bold">Non-numeric</span> Values<br>
+                <div class="container h-full min-w-full grid grid-cols-5 m-auto text-center">
+                    <div class="col-span-3 p-3 text-2xl">Top {{obj.str_col(col)['length']}} occurring strings </div>
+                    <div class="row-span-6 col-span-2 m-auto text-2xl">
+                        Out of a total of <span class="text-3xl font-bold">{{obj.str_col(col)['words']}}</span> strings, comprised of <span class="text-3xl font-bold">{{obj.str_col(col)['words_dist']}}</span> distinct words
+                    </div>
+                    {% for i in range(obj.str_col(col)['length']) %}
+                    <div class="text-xl text-red-300">{{obj.str_col(col)['top_n_words']['string'].loc[i]}}</div>
+                    <div class="text-xl font-bold">{{obj.str_col(col)['top_n_words']['perc'].loc[i]}} <span class="text-sm">%</span></div>
+                    <div class="text-2xl font-semibold">{{obj.str_col(col)['top_n_words']['count'].loc[i]}} <span class="text-xl">times</span></div>
+                    {% endfor %}
+                </div>
                 {% endif %}
 
             </div>

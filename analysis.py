@@ -79,10 +79,27 @@ class data_analysis_v2:
         skew=round(column.skew(),2)
         return {'dt':dt,'max':max_,'min':min_,'mean':mean_,'q25':q25,'q50':q50,'q75':q75,'skew':skew}
 
-    def string_column(self,col):
-        column = self.df[col]
+    def str_col(self,col):
+        column = self.df[col].dropna()
         str_dt="String"
-        most_occurring=column.values_count
+        words = []
+        for row in range(len(column)):
+            text_list = column.iloc[row].split()
+            for t in text_list:
+                words.append(t.strip())
+        top_n_words = pd.Series(words).value_counts().head().reset_index().rename(columns = {"index": "string", 0: "count"})
+        top_n_words['perc'] = top_n_words['string'].apply(lambda x: sum([1 if x == i else 0 for i in words]) * 100/ len(words)).round(2)
+
+        top_values = column.value_counts().head().reset_index()
+        top_values.columns=["value","count"]
+        top_values['value'] = top_values['value'].apply(lambda x: x[:20]+"..." if len(x)>20 else x)
+        top_values['perc_value']= (top_values['count']*100/self.row_count).round(2)
+
+
+
+        return {'top_n_words':top_n_words,'length':len(top_n_words),'words': f'{len(words):,}','words_dist' : f'{len(set(words)):,}',
+                'top_values':top_values,'length_2':len(top_values)}
+
 
     def histogram_data(self,col):
         column = pd.DataFrame(self.df[col]).dropna()
