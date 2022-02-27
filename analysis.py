@@ -1,8 +1,4 @@
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import plotly
-import json
 
 class data_analysis_v2:
     def __init__(self,
